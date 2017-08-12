@@ -109,3 +109,21 @@ test.cb('Middleware | Validation Error', (t) => {
 
   store.dispatch({ type: RSL_LOAD, append: RSL_APPEND });
 });
+
+
+test.cb('Middleware | No consequent actions', (t) => {
+  const dom = new JSDOM('<!DOCTYPE html>', { runScripts: 'dangerously' });
+  const reducer = sinon.spy(() => ({}));
+  const store = createStore(reducer, applyMiddleware(middleware(dom.window.document)));
+  const src = 'https://foo.com';
+
+  store.subscribe(() => {
+    t.fail(new Error('Unexpected reducer call count'));
+    t.end();
+  });
+
+  store.dispatch({ type: RSL_LOAD, payload: src });
+
+  t.is(reducer.callCount, 1);
+  t.end();
+});
