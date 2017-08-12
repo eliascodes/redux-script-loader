@@ -32,5 +32,8 @@
       "babel-register"
     ],
     "babel": "inherit"
+  },
+  "dependencies": {
+    "joi": "^10.6.0"
   }
 }
