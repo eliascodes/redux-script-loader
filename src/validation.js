@@ -1,25 +1,24 @@
 import { RSL_LOAD } from './constants.js';
+import Joi from 'joi';
 
 export const isRSLA = ({ type }) => type === RSL_LOAD;
 
-export const validateRSLAction = ({ payload, async, check }) => {
-  const validationErrors = [];
+const schemaFSA = Joi.object({
+  type: Joi.string().required(),
+  payload: Joi.any().optional(),
+});
 
-  if (! payload) {
-    validationErrors.push({ message: 'No "payload" attribute' });
-  }
+const schemaRSLA = Joi.object({
+  type: Joi.only(RSL_LOAD).required(),
+  payload: Joi.string().required(),
+  async: Joi.boolean().optional(),
+  check: Joi.func().optional(),
+  append: Joi.alternatives().try(Joi.string(), schemaFSA).optional(),
+  success: Joi.alternatives().try(Joi.string(), schemaFSA).optional(),
+  fail: Joi.alternatives().try(Joi.string(), schemaFSA).optional(),
+});
 
-  if (async) {
-    if (typeof async !== 'boolean') {
-      validationErrors.push({ message: 'Optional parameter "async" must be boolean' });
-    }
-  }
-
-  if (check) {
-    if (typeof check !== 'function') {
-      validationErrors.push({ message: 'Optional parameter "check" must be function' });
-    }
-  }
-
-  return validationErrors;
+export const validateRSLAction = (action) => {
+  const { error } = Joi.validate(action, schemaRSLA, { abortEarly: false });
+  return error ? error.details : [];
 };

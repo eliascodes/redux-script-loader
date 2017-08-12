@@ -6,6 +6,6 @@ export class InvalidRSL extends TypeError {
       `;
 
     super(msg);
-    this.validationErrors = validationErrors;
+    this.validationErrors = validationErrors.map(({ message }) => ({ message }));
   }
 }

@@ -18,7 +18,7 @@ test('validateRSLAction | no payload', (t) => {
   const errors = validateRSLAction(action);
 
   t.is(errors.length, 1);
-  t.deepEqual(errors[0], { message: 'No "payload" attribute' });
+  t.deepEqual(errors[0].message, '"payload" is required');
 });
 
 test('validateRSLAction | payload, non-boolean "async"', (t) => {
@@ -27,7 +27,7 @@ test('validateRSLAction | payload, non-boolean "async"', (t) => {
   const errors = validateRSLAction(action);
 
   t.is(errors.length, 1);
-  t.deepEqual(errors[0], { message: 'Optional parameter "async" must be boolean' });
+  t.deepEqual(errors[0].message, '"async" must be a boolean');
 });
 
 test('validateRSLAction | payload, non-function "check"', (t) => {
@@ -36,7 +36,7 @@ test('validateRSLAction | payload, non-function "check"', (t) => {
   const errors = validateRSLAction(action);
 
   t.is(errors.length, 1);
-  t.deepEqual(errors[0], { message: 'Optional parameter "check" must be function' });
+  t.deepEqual(errors[0].message, '"check" must be a Function');
 });
 
 test('validateRSLAction | payload, non-boolean "async", non-function "check"', (t) => {
@@ -45,6 +45,6 @@ test('validateRSLAction | payload, non-boolean "async", non-function "check"', (
   const errors = validateRSLAction(action);
 
   t.is(errors.length, 2);
-  t.deepEqual(errors[0], { message: 'Optional parameter "async" must be boolean' });
-  t.deepEqual(errors[1], { message: 'Optional parameter "check" must be function' });
+  t.deepEqual(errors[0].message, '"async" must be a boolean');
+  t.deepEqual(errors[1].message, '"check" must be a Function');
 });

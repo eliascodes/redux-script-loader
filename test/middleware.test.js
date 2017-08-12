@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { createStore, applyMiddleware } from 'redux';
 import middleware from '../src/middleware.js';
 import { InvalidRSL } from '../src/errors.js';
-import { RSL_LOAD, RSL_APPEND, RSL_SUCCESS, RSL_FAIL } from '../src/constants.js';
+import { RSL_LOAD } from '../src/constants.js';
 
 
 test.cb('Middleware | Load Successfully', (t) => {
@@ -12,6 +12,8 @@ test.cb('Middleware | Load Successfully', (t) => {
   const reducer = sinon.spy(() => ({}));
   const store = createStore(reducer, applyMiddleware(middleware(dom.window.document)));
   const src = 'https://foo.com';
+  const RSL_APPEND = 'RSL_APPEND';
+  const RSL_SUCCESS = 'RSL_SUCCESS';
 
   store.subscribe(() => {
     switch (reducer.callCount) {
@@ -35,7 +37,7 @@ test.cb('Middleware | Load Successfully', (t) => {
     }
   });
 
-  store.dispatch({ type: RSL_LOAD, payload: src });
+  store.dispatch({ type: RSL_LOAD, payload: src, append: RSL_APPEND, success: RSL_SUCCESS });
 });
 
 
@@ -44,6 +46,8 @@ test.cb('Middleware | Load Failure', (t) => {
   const reducer = sinon.spy(() => ({}));
   const store = createStore(reducer, applyMiddleware(middleware(dom.window.document)));
   const src = 'https://foo.com';
+  const RSL_APPEND = 'RSL_APPEND';
+  const RSL_FAIL = 'RSL_FAIL';
 
   store.subscribe(() => {
     switch (reducer.callCount) {
@@ -71,6 +75,8 @@ test.cb('Middleware | Load Failure', (t) => {
     type: RSL_LOAD,
     payload: src,
     check: () => Promise.reject(new Error('oops')),
+    append: RSL_APPEND,
+    fail: RSL_FAIL,
   });
 });
 
@@ -79,6 +85,7 @@ test.cb('Middleware | Validation Error', (t) => {
   const dom = new JSDOM('<!DOCTYPE html>', { runScripts: 'dangerously' });
   const reducer = sinon.spy(() => ({}));
   const store = createStore(reducer, applyMiddleware(middleware(dom.window.document)));
+  const RSL_APPEND = 'RSL_APPEND';
 
   store.subscribe(() => {
     switch (reducer.callCount) {
@@ -89,7 +96,7 @@ test.cb('Middleware | Validation Error', (t) => {
         reducer.lastCall.args[1],
         {
           type: RSL_APPEND,
-          payload: new InvalidRSL([ { message: 'No "payload" attribute' } ]),
+          payload: new InvalidRSL([ { message: '"payload" is required' } ]),
           error: true
         }
       );
@@ -100,5 +107,5 @@ test.cb('Middleware | Validation Error', (t) => {
     }
   });
 
-  store.dispatch({ type: RSL_LOAD });
+  store.dispatch({ type: RSL_LOAD, append: RSL_APPEND });
 });
