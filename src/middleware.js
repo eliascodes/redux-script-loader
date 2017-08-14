@@ -1,6 +1,6 @@
 import { validateRSLAction, isRSLA } from './validation.js';
 import { InvalidRSL } from './errors.js';
-import { appendScriptTag, getScriptAttributes, getLoadingCheck } from './util.js';
+import { appendScriptTag, getScriptAttributes } from './util.js';
 
 
 export default (doc) => ({ dispatch }) => {
@@ -23,18 +23,14 @@ export default (doc) => ({ dispatch }) => {
 
     // append script tag
     const attr = getScriptAttributes(action);
-    appendScriptTag(doc, attr);
+    const tag = appendScriptTag(doc, attr);
 
     // dispatch script loading tag
     dispatchIf(action.append, { payload: attr });
 
-    const check = getLoadingCheck(action);
-
-    // fire check
-    check()
     // dispatch finish/timeout after check resolves/rejects
-      .then(() => dispatchIf(action.success, { payload: attr }))
-      .catch((e) => dispatchIf(action.fail, { payload: e, error: true }));
+    tag.addEventListener('load', () => dispatchIf(action.success, { payload: attr }));
+    tag.addEventListener('error', (e) => dispatchIf(action.fail, { payload: e, error: true }));
   };
 };
 

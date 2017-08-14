@@ -12,7 +12,6 @@ const schemaRSLA = Joi.object({
   type: Joi.only(RSL_LOAD).required(),
   payload: Joi.string().required(),
   async: Joi.boolean().optional(),
-  check: Joi.func().optional(),
   append: Joi.alternatives().try(Joi.string(), schemaFSA).optional(),
   success: Joi.alternatives().try(Joi.string(), schemaFSA).optional(),
   fail: Joi.alternatives().try(Joi.string(), schemaFSA).optional(),

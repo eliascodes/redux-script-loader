@@ -6,11 +6,11 @@ export const appendScriptTag = (doc, { src, async }) => {
   script.async = async;
 
   doc.querySelector('body').appendChild(script);
+
+  return script;
 };
 
 export const getScriptAttributes = ({ payload, async }) => ({
   src: payload,
   async: typeof async !== 'undefined' ? async : true,
 });
-
-export const getLoadingCheck = (action) => action.check || (() => Promise.resolve());

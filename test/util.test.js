@@ -1,6 +1,6 @@
 import test from 'ava';
 import { JSDOM } from 'jsdom';
-import { appendScriptTag, getScriptAttributes, getLoadingCheck } from '../src/util.js';
+import { appendScriptTag, getScriptAttributes } from '../src/util.js';
 
 test('appendScriptTag', (t) => {
   const dom = new JSDOM('<!DOCTYPE html>', { runScripts: 'dangerously' });
@@ -34,27 +34,4 @@ test('getScriptAttributes | w/o async', (t) => {
   t.is(typeof attrs, 'object');
   t.is(attrs.src, action.payload);
   t.is(attrs.async, true);
-});
-
-test('getLoadingCheck | w/ check', (t) => {
-  const action = { check: () => {} };
-
-  const check = getLoadingCheck(action);
-
-  t.is(typeof check, 'function');
-  t.is(check, action.check);
-});
-
-test.cb('getLoadingCheck | w/o check', (t) => {
-  const action = {};
-
-  const check = getLoadingCheck(action);
-  const promise = check();
-
-  t.is(typeof check, 'function');
-  t.true(promise instanceof Promise);
-
-  promise
-    .then(t.end)
-    .catch(t.end);
 });

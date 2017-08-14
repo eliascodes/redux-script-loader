@@ -30,21 +30,28 @@ test('validateRSLAction | payload, non-boolean "async"', (t) => {
   t.deepEqual(errors[0].message, '"async" must be a boolean');
 });
 
-test('validateRSLAction | payload, non-function "check"', (t) => {
-  const action = { type: RSL_LOAD, payload: 'foo', check: 1 };
-
-  const errors = validateRSLAction(action);
-
-  t.is(errors.length, 1);
-  t.deepEqual(errors[0].message, '"check" must be a Function');
-});
-
-test('validateRSLAction | payload, non-boolean "async", non-function "check"', (t) => {
-  const action = { type: RSL_LOAD, payload: 'foo', async: 1, check: 1 };
+test('validateRSLAction | payload, non-string non-FSA append', (t) => {
+  const action = { type: RSL_LOAD, payload: 'foo', append: 1 };
 
   const errors = validateRSLAction(action);
 
   t.is(errors.length, 2);
-  t.deepEqual(errors[0].message, '"async" must be a boolean');
-  t.deepEqual(errors[1].message, '"check" must be a Function');
+  t.deepEqual(errors[0].message, '"append" must be a string');
+  t.deepEqual(errors[1].message, '"append" must be an object');
+});
+
+test('validateRSLAction | payload, string append', (t) => {
+  const action = { type: RSL_LOAD, payload: 'foo', append: 'BAR' };
+
+  const errors = validateRSLAction(action);
+
+  t.is(errors.length, 0);
+});
+
+test('validateRSLAction | payload, FSA append', (t) => {
+  const action = { type: RSL_LOAD, payload: 'foo', append: { type: 'BAR', payload: 1 } };
+
+  const errors = validateRSLAction(action);
+
+  t.is(errors.length, 0);
 });

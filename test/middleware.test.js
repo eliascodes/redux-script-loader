@@ -38,6 +38,10 @@ test.cb('Middleware | Load Successfully', (t) => {
   });
 
   store.dispatch({ type: RSL_LOAD, payload: src, append: RSL_APPEND, success: RSL_SUCCESS });
+
+  dom.window.document
+    .querySelector('script')
+    .dispatchEvent(new dom.window.Event('load'));
 });
 
 
@@ -46,6 +50,7 @@ test.cb('Middleware | Load Failure', (t) => {
   const reducer = sinon.spy(() => ({}));
   const store = createStore(reducer, applyMiddleware(middleware(dom.window.document)));
   const src = 'https://foo.com';
+  const evt = new dom.window.Event('error');
   const RSL_APPEND = 'RSL_APPEND';
   const RSL_FAIL = 'RSL_FAIL';
 
@@ -62,7 +67,7 @@ test.cb('Middleware | Load Failure', (t) => {
     case 3:
       t.deepEqual(
         reducer.lastCall.args[1],
-        { type: RSL_FAIL, payload: new Error('oops'), error: true }
+        { type: RSL_FAIL, payload: evt, error: true }
       );
       t.end();
       break;
@@ -71,13 +76,11 @@ test.cb('Middleware | Load Failure', (t) => {
     }
   });
 
-  store.dispatch({
-    type: RSL_LOAD,
-    payload: src,
-    check: () => Promise.reject(new Error('oops')),
-    append: RSL_APPEND,
-    fail: RSL_FAIL,
-  });
+  store.dispatch({ type: RSL_LOAD, payload: src, append: RSL_APPEND, fail: RSL_FAIL });
+
+  dom.window.document
+    .querySelector('script')
+    .dispatchEvent(evt);
 });
 
 
