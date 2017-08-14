@@ -1,7 +1,7 @@
 import loaderMiddleware from './middleware.js';
-import { RSA_LOAD } from './constants.js';
+import { RSL_LOAD } from './constants.js';
 
 export {
   loaderMiddleware,
-  RSA_LOAD,
+  RSL_LOAD,
 };
