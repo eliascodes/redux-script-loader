@@ -1,8 +1,8 @@
 {
   "name": "redux-script-loader",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Redux middleware to load scripts dynamically onto the document",
+  "main": "dist/index.js",
   "scripts": {
     "test": "ava test/*.test.js",
     "cover": "nyc ava test/*.test.js",
@@ -11,9 +11,15 @@
     "clean": "rimraf dist",
     "prepare": "npm run clean && npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["redux", "middleware", "script", "scripts", "loader"],
+  "author": "@eliascodes",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eliascodes/redux-script-loader/issues"
+  },
+  "dependencies": {
+    "joi": "^10.6.0"
+  },
   "devDependencies": {
     "ava": "^0.21.0",
     "babel-cli": "^6.24.1",
@@ -32,8 +38,5 @@
       "babel-register"
     ],
     "babel": "inherit"
-  },
-  "dependencies": {
-    "joi": "^10.6.0"
   }
 }
