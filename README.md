@@ -20,7 +20,7 @@ dispatch({
 });
 ```
 
-## Installation
+## Installation
 To install from npm:
 ```
 $ npm install --save redux-script-loader
@@ -40,7 +40,7 @@ const store = createStore(reducer, applyMiddleware(loaderMiddleware(document)));
 ### `RSL_LOAD` :: `Symbol`
 A symbol indicating that the action should be handled by the `redux-script-loader` middleware.
 
-### `loaderMiddleware` :: `Function`
+### `loaderMiddleware` :: `Function`
 Returns a redux-compatible middleware. Must be initialised with the `document` object.
 
 ## RSL Actions
